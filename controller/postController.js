@@ -37,10 +37,11 @@ postRouter.get('/search', verifyToken, async (req, res) => {
     const idUser = user.dataValues.id;
     const posts = await BlogPost.findAll({
       include: { model: User, as: 'user', attributes: { exclude: 'password' } },
-      where: { idUser, [Op.or]: [
-        { title: { [Op.like]: `%${searchTerm}%` } },
-        { content: { [Op.like]: `${searchTerm}%` } },
-      ],
+      where: { userId: idUser,
+        [Op.or]: [
+          { title: { [Op.like]: `%${searchTerm}%` } },
+          { content: { [Op.like]: `${searchTerm}%` } },
+        ],
       } });
     if (searchTerm === '') {
       const allPosts = await BlogPost.findAll({
